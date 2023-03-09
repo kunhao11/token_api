@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>123456</h1>
+    <input type="text" id="enames"><br>
+    <button onclick="login()">点击登录</button>
+    <h2>再次访问的时候进行token验证</h2>
+     <button onclick="yanzhegn()">验证</button>
+</body>
+
+<script>
+    function login(){
+        axios.get(`/index?ename=${enames.value}`).then((res)=>{
+            console.log(res.data.yanzehgn);
+            // 存储token
+            window.sessionStorage.setItem("token",res.data.yanzehgn)
+        })
+    }
+    // 获取到的数据进行保存
+function yanzhegn(){
+    if (window.sessionStorage.getItem("token")==null) {
+        alert("请登录")
+    }else{
+        axios({
+        methods:"get",
+        url:"/one",
+        //                               ↓空格是必须的  规定
+        headers:{'Authorization' :`Bearer ${sessionStorage.getItem("token")}`}
+    }).then((res)=>{
+        alert("欢迎登录，登录成功")
+    }).catch((err)=>{//如果请求过程中出现报错  则token超时
+        alert("登录超时")
+    })
+    }
+}
+</script>
+</html>
